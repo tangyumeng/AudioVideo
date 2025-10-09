@@ -27,7 +27,7 @@ class AudioRecordViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+        
     private let playButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("▶️ 播放录音", for: .normal)

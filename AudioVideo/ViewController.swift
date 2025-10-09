@@ -11,7 +11,7 @@ class ViewController: UIViewController {
     
     // MARK: - Properties
     
-    private let topics = AudioVideoTopic.allTopics
+    private let layers: [VideoLayer] = [.coreMedia, .rawCapture, .codecFormat, .metalRender, .advanced]
     
     private lazy var tableView: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     // MARK: - Setup
     
     private func setupUI() {
-        title = "音视频开发学习"
+        title = "iOS 视频底层技术"
         view.backgroundColor = .systemBackground
         
         // Add tableView
@@ -50,8 +50,17 @@ class ViewController: UIViewController {
 // MARK: - UITableViewDataSource
 
 extension ViewController: UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return layers.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return topics.count
+        let layer = layers[section]
+        return AudioVideoTopic.videoTopicsByLayer[layer]?.count ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return layers[section].rawValue
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -59,8 +68,11 @@ extension ViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let topic = topics[indexPath.row]
-        cell.configure(with: topic)
+        let layer = layers[indexPath.section]
+        if let topics = AudioVideoTopic.videoTopicsByLayer[layer] {
+            let topic = topics[indexPath.row]
+            cell.configure(with: topic)
+        }
         return cell
     }
 }
@@ -71,6 +83,8 @@ extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
+        let layer = layers[indexPath.section]
+        guard let topics = AudioVideoTopic.videoTopicsByLayer[layer] else { return }
         let topic = topics[indexPath.row]
         let detailVC = topic.viewController.init()
         detailVC.title = topic.title
@@ -79,6 +93,13 @@ extension ViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? UITableViewHeaderFooterView {
+            header.textLabel?.font = .systemFont(ofSize: 15, weight: .bold)
+            header.textLabel?.textColor = .systemBlue
+        }
     }
 }
 

@@ -1,208 +1,235 @@
-# iOS 音视频开发学习项目
+# iOS 视频底层技术学习项目
 
-这是一个系统学习 iOS 音视频开发技术的示例项目，包含了常用的音视频采集、处理、播放等功能的完整实现。
+## 🎯 项目简介
 
-## 📚 项目简介
+这是一个系统化学习iOS视频底层技术的项目，从Core Media/Core Video最底层API到高级视频应用，分为5个层次，共20+个详细示例。
 
-本项目采用主页列表的形式，将音视频开发的各个知识点作为独立模块展示，每个模块都包含完整的示例代码和交互界面，方便学习和测试。
+## 📱 运行项目
 
-## 🎯 功能模块
+1. 打开 `AudioVideo.xcodeproj`
+2. 选择模拟器或真机
+3. 运行项目
+4. 在主界面选择想要学习的知识点
 
-### 1. 📷 相机采集 (Camera Capture)
-- **技术栈**: `AVFoundation`, `AVCaptureSession`, `AVCaptureDevice`
-- **功能**: 
-  - 实时相机预览
-  - 前后摄像头切换
-  - 相机权限管理
-- **文件**: `CameraCaptureViewController.swift`
+## 📚 学习体系
 
-### 2. 🎬 视频播放 (Video Player)
-- **技术栈**: `AVPlayer`, `AVPlayerLayer`, `AVPlayerItem`
-- **功能**:
-  - 本地/网络视频播放
-  - 播放控制（播放/暂停）
-  - 自定义播放器界面
-- **文件**: `VideoPlayerViewController.swift`
+### Layer 1: Core Media & Core Video (最底层)
+视频系统的核心数据结构
 
-### 3. 🎤 音频录制 (Audio Recording)
-- **技术栈**: `AVAudioRecorder`, `AVAudioSession`
-- **功能**:
-  - 高质量音频录制
-  - 实时录音时长显示
-  - 录音文件保存与管理
-- **文件**: `AudioRecordViewController.swift`
+- ✅ **CMSampleBuffer 详解** - 视频帧容器的完整解析
+- ✅ **CVPixelBuffer 操作** - 直接操作像素数据（灰度、反色、亮度调整）
+- ✅ **CMTime 时间系统** - 精确时间表示和计算
+- ✅ **像素格式详解** - RGB、YUV、BGRA等格式对比
 
-### 4. 🔊 音频播放 (Audio Playback)
-- **技术栈**: `AVAudioPlayer`
-- **功能**:
-  - 音频文件播放
-  - 播放进度控制
-  - 音量调节
-  - 网络音频加载
-- **文件**: `AudioPlayViewController.swift`
+### Layer 2: 原始数据采集与处理
+AVFoundation底层采集
 
-### 5. ✂️ 视频编辑 (Video Editing)
-- **技术栈**: `AVAssetExportSession`, `AVAsset`, `CMTime`
-- **功能**:
-  - 视频时间裁剪
-  - 视频导出
-  - 进度监控
-  - 多种导出质量选项
-- **文件**: `VideoEditViewController.swift`
+- ✅ **AVCaptureVideoDataOutput** - 实时获取原始视频帧（完整实现，带性能监控）
+- ✅ **AVAssetReader 逐帧读取** - 从视频文件精确读取每一帧（完整实现）
+- ⏳ **AVAssetWriter 逐帧写入** - 将帧写入视频文件（占位）
+- ⏳ **相机深度控制** - 手动对焦、曝光、白平衡（占位）
 
-### 6. 🎨 视频滤镜 (Video Filters)
-- **技术栈**: `Core Image`, `CIFilter`, `CIContext`
-- **功能**:
-  - 实时滤镜效果
-  - 多种滤镜（黑白、怀旧、模糊、边缘检测）
-  - 滤镜强度调节
-  - 滤镜混合效果
-- **文件**: `VideoFilterViewController.swift`
+### Layer 3: 编解码与格式转换
+VideoToolbox硬件编解码
 
-### 7. 📹 视频录制 (Video Recording)
-- **技术栈**: `AVCaptureMovieFileOutput`, `AVCaptureSession`
-- **功能**:
-  - 视频录制
-  - 实时预览
-  - 录制时长显示
-  - 前后摄像头切换
-  - 音视频同步录制
-- **文件**: `VideoRecordViewController.swift`
+- ⏳ **H.264/H.265 硬编码** - VideoToolbox编码器（占位）
+- ⏳ **H.264/H.265 硬解码** - VideoToolbox解码器（占位）
+- ⏳ **格式转换与转码** - 分辨率、码率转换（占位）
+- ⏳ **AVAssetExportSession** - 高层导出API（占位）
 
-### 8. 🎵 音频处理 (Audio Processing)
-- **技术栈**: `AVAudioEngine`, `AVAudioUnitReverb`, `AVAudioUnitDelay`, `AVAudioUnitDistortion`
-- **功能**:
-  - 实时音效处理
-  - 混响效果
-  - 延迟效果
-  - 失真效果
-  - 音效参数调节
-- **文件**: `AudioProcessViewController.swift`
+### Layer 4: Metal 渲染与自定义滤镜
+GPU加速视频处理
 
-### 9. 📸 照片采集 (Photo Capture)
-- **技术栈**: `AVCapturePhotoOutput`, `AVCaptureDevice`
-- **功能**:
-  - 高质量照片拍摄
-  - 闪光灯控制
-  - 前后摄像头切换
-  - 实时预览
-  - 照片保存
-- **文件**: `PhotoCaptureViewController.swift`
+- ⏳ **Metal 视频渲染管线** - Metal基础（占位）
+- ⏳ **自定义 Metal 滤镜** - 着色器编程（占位）
+- ⏳ **Core Image + Metal** - 结合使用（占位）
+- ⏳ **GPU 性能优化** - MPS和优化技巧（占位）
 
-### 10. 🎼 音频可视化 (Audio Visualization)
-- **技术栈**: `AVAudioEngine`, `Core Graphics`, `CADisplayLink`
-- **功能**:
-  - 实时音频波形显示
-  - 频谱可视化
-  - 动态色彩效果
-  - 自定义绘制
-- **文件**: `AudioVisualizationViewController.swift`
+### Layer 5: 高级视频应用
+实际应用效果
 
-## 🏗️ 项目结构
+- ⏳ **实时美颜算法** - 磨皮、美白、瘦脸（占位）
+- ⏳ **绿幕抠图** - Chroma Key实现（占位）
+- ⏳ **多轨道视频合成** - AVComposition（占位）
+- ⏳ **视频水印与字幕** - 自定义合成器（占位）
+- ⏳ **实时视频直播** - RTMP/HLS（占位）
 
+## 📖 详细学习指南
+
+请查看 [`VIDEO_LEARNING_GUIDE.md`](./VIDEO_LEARNING_GUIDE.md) 获取：
+
+- 每个知识点的详细讲解
+- 核心API使用说明
+- 代码示例和最佳实践
+- 常见问题解答
+- 性能优化建议
+
+## 🔑 核心特色
+
+### 1. 完整的实现示例
+
+已实现的示例都包含：
+- 完整的UI界面
+- 详细的代码注释
+- 实时信息展示
+- 性能监控
+- 错误处理
+
+例如 `CMSampleBufferViewController`:
+- 实时采集视频帧
+- 详细解析每一帧的结构
+- 显示时间戳、格式、像素信息
+- 展示CMSampleBuffer的各个组成部分
+
+### 2. 渐进式学习
+
+从最底层的数据结构开始：
 ```
-AudioVideo/
-├── AudioVideo/
-│   ├── AppDelegate.swift           # 应用程序委托
-│   ├── SceneDelegate.swift         # 场景委托
-│   ├── ViewController.swift        # 主页列表控制器
-│   ├── AudioVideoTopic.swift       # 知识点数据模型
-│   └── ViewControllers/            # 各功能模块视图控制器
-│       ├── CameraCaptureViewController.swift
-│       ├── VideoPlayerViewController.swift
-│       ├── AudioRecordViewController.swift
-│       ├── AudioPlayViewController.swift
-│       ├── VideoEditViewController.swift
-│       ├── VideoFilterViewController.swift
-│       ├── VideoRecordViewController.swift
-│       ├── AudioProcessViewController.swift
-│       ├── PhotoCaptureViewController.swift
-│       └── AudioVisualizationViewController.swift
-└── README.md                       # 项目说明文档
+CMSampleBuffer (数据容器)
+    ↓
+CVPixelBuffer (像素数据)
+    ↓
+AVCaptureVideoDataOutput (实时采集)
+    ↓
+AVAssetReader/Writer (文件读写)
+    ↓
+VideoToolbox (编解码)
+    ↓
+Metal (GPU处理)
+    ↓
+高级应用
 ```
 
-## 🚀 快速开始
+### 3. 实用的代码示例
 
-1. **克隆项目**
-   ```bash
-   git clone [repository-url]
-   cd AudioVideo
-   ```
+所有代码都可以直接运行，例如：
 
-2. **打开项目**
-   ```bash
-   open AudioVideo.xcodeproj
-   ```
+**CVPixelBuffer直接操作**:
+```swift
+// 锁定像素缓冲区
+CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
 
-3. **运行项目**
-   - 选择目标设备（建议使用真机，因为某些功能需要相机和麦克风）
-   - 点击运行按钮或使用快捷键 `⌘ + R`
+// 获取基地址
+let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer)
+let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
 
-## ⚠️ 注意事项
+// 逐像素处理
+for y in 0..<height {
+    for x in 0..<width {
+        let offset = y * bytesPerRow + x * 4
+        let ptr = baseAddress.advanced(by: offset).assumingMemoryBound(to: UInt8.self)
+        
+        // 处理BGRA像素
+        let b = ptr[0]
+        let g = ptr[1]
+        let r = ptr[2]
+        let a = ptr[3]
+        
+        // 灰度转换
+        let gray = UInt8(0.114 * Float(b) + 0.587 * Float(g) + 0.299 * Float(r))
+        ptr[0] = gray
+        ptr[1] = gray
+        ptr[2] = gray
+    }
+}
 
-### 权限配置
-
-项目需要以下权限，请在 `Info.plist` 中添加相应的权限说明：
-
-- **相机权限**: `NSCameraUsageDescription`
-- **麦克风权限**: `NSMicrophoneUsageDescription`
-- **相册权限**: `NSPhotoLibraryAddUsageDescription`（如果需要保存照片/视频）
-
-示例配置：
-```xml
-<key>NSCameraUsageDescription</key>
-<string>需要访问相机进行视频采集和拍照</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>需要访问麦克风进行音频录制</string>
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>需要访问相册保存照片和视频</string>
+CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
 ```
 
-### 设备要求
+## 🚀 已实现功能
 
-- **iOS 13.0+**
-- **Xcode 12.0+**
-- **Swift 5.0+**
-- **真机测试**（相机和麦克风功能在模拟器上无法使用）
+### CMSampleBuffer详解
+- ✅ 实时相机采集
+- ✅ 完整的CMSampleBuffer结构解析
+- ✅ 时间信息（PTS、Duration）
+- ✅ 格式描述（分辨率、编码格式）
+- ✅ 像素缓冲区信息
+- ✅ 附件信息展示
 
-## 📖 学习路径建议
+### CVPixelBuffer操作
+- ✅ 灰度转换算法
+- ✅ 反色效果
+- ✅ 亮度调整
+- ✅ 像素读取和显示
+- ✅ 实时预览
 
-1. **入门**: 从音频播放和视频播放开始，了解基本的媒体播放 API
-2. **进阶**: 学习音视频采集和录制，掌握 AVFoundation 核心功能
-3. **高级**: 深入音视频处理、滤镜和可视化，了解实时处理技术
+### CMTime时间系统
+- ✅ CMTime结构详解
+- ✅ 时间运算示例
+- ✅ CMTimeRange使用
+- ✅ 视频播放时间监控
+- ✅ 时间码格式化
 
-## 🛠️ 技术栈
+### AVCaptureVideoDataOutput
+- ✅ 实时视频帧采集
+- ✅ 帧率控制（15/30/60fps）
+- ✅ 像素格式切换（BGRA/YUV）
+- ✅ 性能监控（FPS、丢帧统计）
+- ✅ 实时预览
 
-- **语言**: Swift
-- **框架**: 
-  - AVFoundation（核心音视频框架）
-  - Core Image（图像处理）
-  - Core Graphics（图形绘制）
-  - UIKit（用户界面）
+### AVAssetReader
+- ✅ 从相册选择视频
+- ✅ 逐帧读取
+- ✅ 手动前进/自动播放
+- ✅ 进度条控制
+- ✅ 详细的帧信息展示
 
-## 📝 代码特点
+## 💡 适合人群
 
-- ✅ 完整的注释说明
-- ✅ 清晰的代码结构
-- ✅ MARK 标记分类
-- ✅ 错误处理机制
-- ✅ 用户友好的界面
-- ✅ 权限管理示例
+- iOS视频开发初学者
+- 需要深入理解底层原理的开发者
+- 想要实现自定义视频处理的工程师
+- 准备做视频相关面试的求职者
 
-## 🔗 相关资源
+## 📝 学习建议
 
-- [Apple AVFoundation 官方文档](https://developer.apple.com/av-foundation/)
-- [Core Image 编程指南](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreImaging/ci_intro/ci_intro.html)
-- [Audio Session 编程指南](https://developer.apple.com/library/archive/documentation/Audio/Conceptual/AudioSessionProgrammingGuide/Introduction/Introduction.html)
+1. **按层次学习**：从Layer 1开始，逐层深入
+2. **动手实践**：运行每个示例，观察效果
+3. **阅读代码**：仔细阅读源码和注释
+4. **修改实验**：尝试修改参数，理解影响
+5. **查阅文档**：配合Apple官方文档学习
 
-## 📄 许可证
+## 🔗 参考资源
 
-本项目仅供学习使用。
+- [AVFoundation Programming Guide](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/AVFoundationPG/)
+- [Core Media Framework Reference](https://developer.apple.com/documentation/coremedia)
+- [Core Video Programming Guide](https://developer.apple.com/library/archive/documentation/GraphicsImaging/Conceptual/CoreVideo/)
+- [VideoToolbox Framework](https://developer.apple.com/documentation/videotoolbox)
+- [Metal Programming Guide](https://developer.apple.com/metal/)
 
-## 🤝 贡献
+## 🛠 技术栈
 
-欢迎提交 Issue 和 Pull Request！
+- Swift 5.9+
+- iOS 18.0+
+- AVFoundation
+- Core Media
+- Core Video
+- VideoToolbox (待实现)
+- Metal (待实现)
+- Core Image
+
+## 📊 项目进度
+
+- ✅ 项目架构设计
+- ✅ Layer 1: 完整实现（4个示例）
+- ✅ Layer 2: 部分实现（2个完整示例 + 2个占位）
+- ⏳ Layer 3: 占位实现（待完善）
+- ⏳ Layer 4: 占位实现（待完善）
+- ⏳ Layer 5: 占位实现（待完善）
+- ✅ 详细学习文档
+
+## 📄 License
+
+MIT License
+
+## 👨‍💻 贡献
+
+欢迎提Issue和PR，一起完善这个学习项目！
+
+## 🙏 致谢
+
+感谢Apple提供强大的视频处理框架，感谢所有为iOS视频技术做出贡献的开发者！
 
 ---
 
-**祝你学习愉快！🎉**
+⭐️ 如果这个项目对你有帮助，请给个Star！
