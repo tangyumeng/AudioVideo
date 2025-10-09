@@ -176,16 +176,31 @@ class CMSampleBufferViewController: UIViewController {
     
     @objc private func toggleCapture() {
         if captureSession?.isRunning == true {
-            captureSession?.stopRunning()
-            startButton.setTitle("开始采集", for: .normal)
-            startButton.backgroundColor = .systemBlue
+            // 在后台线程停止session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.stopRunning()
+                
+                // 更新UI需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("开始采集", for: .normal)
+                    self?.startButton.backgroundColor = .systemBlue
+                }
+            }
         } else {
             if captureSession == nil {
                 setupCaptureSession()
             }
-            captureSession?.startRunning()
-            startButton.setTitle("停止采集", for: .normal)
-            startButton.backgroundColor = .systemRed
+            
+            // 在后台线程启动session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.startRunning()
+                
+                // 更新UI需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("停止采集", for: .normal)
+                    self?.startButton.backgroundColor = .systemRed
+                }
+            }
         }
     }
     

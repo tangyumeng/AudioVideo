@@ -56,13 +56,25 @@ GPU加速视频处理
 
 ## 📖 详细学习指南
 
-请查看 [`VIDEO_LEARNING_GUIDE.md`](./VIDEO_LEARNING_GUIDE.md) 获取：
+### 核心文档
 
-- 每个知识点的详细讲解
-- 核心API使用说明
-- 代码示例和最佳实践
-- 常见问题解答
-- 性能优化建议
+1. **[VIDEO_LEARNING_GUIDE.md](./VIDEO_LEARNING_GUIDE.md)** - 完整学习指南
+   - 每个知识点的详细讲解
+   - 核心API使用说明
+   - 代码示例和最佳实践
+
+2. **[YUV_VS_RGB_EXPLAINED.md](./YUV_VS_RGB_EXPLAINED.md)** - YUV颜色空间深度解析
+   - 为什么YUV更接近人眼感知？
+   - YUV vs RGB详细对比
+   - 色度降采样原理
+   - 在iOS中的实际应用
+
+3. **[THREADING_GUIDE.md](./THREADING_GUIDE.md)** - 线程管理最佳实践
+   - AVFoundation线程安全
+   - UIKit线程规则
+   - 常见问题和解决方案
+
+4. **[QUICKSTART.md](./QUICKSTART.md)** - 5分钟快速上手
 
 ## 🔑 核心特色
 

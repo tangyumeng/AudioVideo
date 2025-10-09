@@ -21,6 +21,9 @@ class VideoDataOutputViewController: UIViewController {
     private var startTime: CFAbsoluteTime = 0
     private var droppedFrames: Int = 0
     
+    // 线程安全的配置属性
+    private var currentTargetFPS: Int = 30
+    
     private let previewView: UIView = {
         let view = UIView()
         view.backgroundColor = .black
@@ -242,18 +245,33 @@ class VideoDataOutputViewController: UIViewController {
     
     @objc private func toggleCapture() {
         if captureSession?.isRunning == true {
-            captureSession?.stopRunning()
-            startButton.setTitle("开始采集", for: .normal)
-            startButton.backgroundColor = .systemGreen
+            // 在后台线程停止session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.stopRunning()
+                
+                // 更新UI需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("开始采集", for: .normal)
+                    self?.startButton.backgroundColor = .systemGreen
+                }
+            }
         } else {
             setupCaptureSession()
-            captureSession?.startRunning()
-            startButton.setTitle("停止采集", for: .normal)
-            startButton.backgroundColor = .systemRed
             
-            frameCount = 0
-            droppedFrames = 0
-            startTime = CFAbsoluteTimeGetCurrent()
+            // 在后台线程启动session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.startRunning()
+                
+                // 更新UI和重置计数器需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("停止采集", for: .normal)
+                    self?.startButton.backgroundColor = .systemRed
+                    
+                    self?.frameCount = 0
+                    self?.droppedFrames = 0
+                    self?.startTime = CFAbsoluteTimeGetCurrent()
+                }
+            }
         }
     }
     
@@ -282,6 +300,7 @@ class VideoDataOutputViewController: UIViewController {
         
         // 设置帧率
         let fps = [15, 30, 60][fpsSegment.selectedSegmentIndex]
+        currentTargetFPS = fps  // ✅ 保存目标FPS供后台线程使用
         try? camera.lockForConfiguration()
         camera.activeVideoMinFrameDuration = CMTime(value: 1, timescale: CMTimeScale(fps))
         camera.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: CMTimeScale(fps))
@@ -354,7 +373,7 @@ class VideoDataOutputViewController: UIViewController {
         var info = "📊 实时统计\n\n"
         info += "性能指标:\n"
         info += "  • 已处理帧数: \(frameCount)\n"
-        info += "  • 目标FPS: \([15, 30, 60][fpsSegment.selectedSegmentIndex])\n"
+        info += "  • 目标FPS: \(currentTargetFPS)\n"  // ✅ 使用线程安全的属性
         info += "  • 实际FPS: \(String(format: "%.1f", actualFPS))\n"
         info += "  • 丢帧数: \(droppedFrames)\n"
         info += "  • 运行时间: \(String(format: "%.1f", elapsed))s\n\n"

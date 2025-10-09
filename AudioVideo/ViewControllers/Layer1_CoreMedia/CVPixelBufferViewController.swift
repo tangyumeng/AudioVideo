@@ -18,6 +18,9 @@ class CVPixelBufferViewController: UIViewController {
     private var captureSession: AVCaptureSession?
     private var videoOutput: AVCaptureVideoDataOutput?
     
+    // 当前处理模式（线程安全的属性）
+    private var currentProcessMode: Int = 0
+    
     private let originalImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
@@ -202,6 +205,12 @@ class CVPixelBufferViewController: UIViewController {
     
     private func setupActions() {
         startButton.addTarget(self, action: #selector(toggleCapture), for: .touchUpInside)
+        processModeSegment.addTarget(self, action: #selector(processModeChanged), for: .valueChanged)
+    }
+    
+    @objc private func processModeChanged() {
+        // 在主线程更新处理模式
+        currentProcessMode = processModeSegment.selectedSegmentIndex
     }
     
     // MARK: - Camera Permission
@@ -218,16 +227,31 @@ class CVPixelBufferViewController: UIViewController {
     
     @objc private func toggleCapture() {
         if captureSession?.isRunning == true {
-            captureSession?.stopRunning()
-            startButton.setTitle("开始处理", for: .normal)
-            startButton.backgroundColor = .systemBlue
+            // 在后台线程停止session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.stopRunning()
+                
+                // 更新UI需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("开始处理", for: .normal)
+                    self?.startButton.backgroundColor = .systemBlue
+                }
+            }
         } else {
             if captureSession == nil {
                 setupCaptureSession()
             }
-            captureSession?.startRunning()
-            startButton.setTitle("停止处理", for: .normal)
-            startButton.backgroundColor = .systemRed
+            
+            // 在后台线程启动session
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                self?.captureSession?.startRunning()
+                
+                // 更新UI需要回到主线程
+                DispatchQueue.main.async {
+                    self?.startButton.setTitle("停止处理", for: .normal)
+                    self?.startButton.backgroundColor = .systemRed
+                }
+            }
         }
     }
     
@@ -488,11 +512,14 @@ extension CVPixelBufferViewController: AVCaptureVideoDataOutputSampleBufferDeleg
                       from connection: AVCaptureConnection) {
         guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
+        // ✅ 使用线程安全的属性，而不是直接访问UI控件
+        let mode = currentProcessMode
+        
         // 根据选择的模式处理像素
         let processedBuffer: CVPixelBuffer?
         var info = ""
         
-        switch processModeSegment.selectedSegmentIndex {
+        switch mode {
         case 0: // 灰度
             processedBuffer = convertToGrayscale(pixelBuffer)
             info = "灰度转换：使用公式 0.299*R + 0.587*G + 0.114*B"
