@@ -69,6 +69,12 @@ GPU加速视频处理
    - 色度降采样原理
    - 在iOS中的实际应用
 
+2.1 **[PIXEL_FORMAT_MEMORY_CALCULATION.md](./PIXEL_FORMAT_MEMORY_CALCULATION.md)** - 像素格式内存计算
+   - YUV 4:2:0 为什么是1.5字节/像素？
+   - 1920×1080 = 3MB 详细计算
+   - 不同格式内存对比
+   - iOS中的验证代码
+
 3. **[THREADING_GUIDE.md](./THREADING_GUIDE.md)** - 线程管理最佳实践
    - AVFoundation线程安全
    - UIKit线程规则
